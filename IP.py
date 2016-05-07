@@ -12,13 +12,18 @@ class IpInfo(object):
         self.website = website
         self.result = []
     def getipinfo(self):
-        IP = socket.gethostbyname(self.website)
+        data = {'ip':self.website}
         print u"****************************IP信息收集********************************"
-        # print u"[+]IP信息收集（同IP地址域名）"
         start_time = time.time()
         print u"[+]开始时间:%s"%time.ctime()
-        print u"[-]IP Address:"+IP
-        response = requests.get('http://s.tool.chinaz.com/same?s=%s&page=' % IP,).content
+        ra = requests.post('http://ip.chinaz.com/',data=data).content
+        ras = BeautifulSoup(ra)
+        print u'[+]IP地址                    地理位置'
+        item = ras.findAll('p',attrs={'class':'WhwtdWrap bor-b1s col-gray03'})
+        for i in item:
+            print '[-]%-20s'%i.contents[3].text,
+            print '        '+'%-20s'%i.contents[7].text
+        response = requests.get('http://s.tool.chinaz.com/same?s=%s&page='%self.website).content
         try:
             bs = BeautifulSoup(response)
             page = int(bs.find('a',title=u"尾页")['val'])
@@ -26,26 +31,22 @@ class IpInfo(object):
             page = 1
         threads = []
         for i in range(1,page+1):
-            threads.append(threading.Thread(target=self.getInfo,args=(IP,i)))
+            threads.append(threading.Thread(target=self.getInfo,args=(self.website,i)))
         print "[+]%-10s"%(u"同IP域名:")
         for item in threads:
             item.start()
-        # print u"[+]IP信息收集完成"
+        for item in threads:
+            item.join()
         print u"[+]IP信息收集结束，花费%ds"%(time.time()-start_time)
         print "***********************************************************************"
 
     def getInfo(self,IP,page):
         response = requests.get('http://s.tool.chinaz.com/same?s=%s&page=%d' % (IP,page)).content
         soup = BeautifulSoup(response)
-        ip_tmp = []
         for i in soup.findAll('div',attrs={"class":"w30-0 overhid"}):
-            ip_tmp.append(i.contents[0].text)
-        for item in ip_tmp:
-            if item.split('.')[1] == self.website.split('.')[1] and item != self.website:
-                threadLock.acquire()
-                print "[-]%-10s"%item
-                threadLock.release()
-
+            threadLock.acquire()
+            print "[-]%-10s"%i.contents[0].text
+            threadLock.release()
 
 
 
