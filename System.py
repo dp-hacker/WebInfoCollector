@@ -12,25 +12,8 @@ import time
 # from PyQt4.QtNetwork import *
 
 threadLock = threading.Lock()
-system = ['erp','oa','hr','crm','mrp','pm','action','login','admin','manage']
+system = ['inner','erp','oa','hr','crm','mrp','pm','ims','hcp','dcp','action','login','admin','manage','control','root','rar']
 header = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.152 Safari/537.36'}
-
-# class Render(QWebPage):
-#     def __init__(self, url):
-#         proxy = QNetworkProxy()
-#         proxy.setType(QNetworkProxy.Socks5Proxy)
-#         proxy.setHostName('127.0.0.1')
-#         proxy.setPort(1080)
-#         QNetworkProxy.setApplicationProxy(proxy)
-#         self.app = QApplication(sys.argv)
-#         QWebPage.__init__(self)
-#         self.loadFinished.connect(self._loadFinished)
-#         self.mainFrame().load(QUrl(url))
-#         self.app.exec_()
-#
-#     def _loadFinished(self, result):
-#         self.frame = self.mainFrame()
-#         self.app.quit()
 
 def getsystem(website,item,proxy):
     if proxy!=None:
