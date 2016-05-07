@@ -18,7 +18,7 @@ class IpInfo(object):
         print u"[+]开始时间:%s"%time.ctime()
         ra = requests.post('http://ip.chinaz.com/',data=data).content
         ras = BeautifulSoup(ra)
-        print u'[+]IP地址                    地理位置'
+        print u'[+]IP地址                       地理位置'
         item = ras.findAll('p',attrs={'class':'WhwtdWrap bor-b1s col-gray03'})
         for i in item:
             print '[-]%-20s'%i.contents[3].text,
