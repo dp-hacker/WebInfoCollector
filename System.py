@@ -30,7 +30,8 @@ def getsystem(website,item,proxy):
         except:
             getsystem(website,item,None)
     else:
-        url = 'https://cn.bing.com/search?q=site:'+website.lstrip(website.split('.')[0]+'.')+'+%s'%item
+        website = website.lstrip('http://www.'if 'www' in website else 'http://').rstrip('/')
+        url = 'https://cn.bing.com/search?q=site:'+website+'+%s'%item
         response = requests.get(url,headers=header).content
         soup = BeautifulSoup(response)
         for i in soup.findAll('li',attrs={'class':'b_algo'}):
